@@ -1,0 +1,139 @@
+﻿﻿@using SanaToDoLIST.Factories
+@using SanaToDoLIST.Models;
+
+@model TaskViewModel
+@{
+    ViewData["Title"] = "ToDo List";
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+}
+
+<h1 class="d-flex mt-5 align-items-center justify-content-center">@ViewData["Title"]</h1>
+
+<form asp-action="ChangeStorageType" method="post" class="form-inline d-flex mb-4 align-items-center">
+    <div class="form-group text-center">
+        <h5 class="mr-2">Select Storage Type</h5>
+        <div id="storageType">
+            @foreach (var storageType in Enum.GetValues(typeof(StorageType)))
+            {
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="storageType" value="@storageType" onchange="this.form.submit()"
+                    @if (storageType.ToString() == Model.StorageTypeSelected.ToString())
+                    {
+                        <text>checked</text>
+                    }
+                    >
+                    <label class="form-check-label" for="storageType">@storageType.ToString()</label>
+                </div>
+            }
+        </div>
+    </div>
+</form>
+
+<form asp-action="CategoryCreate" method="post" class="form">
+    <div class="row">
+        <h5>Create Category</h5>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group col-4">
+            <input asp-for="NewCategory.Name" class="form-control" placeholder="Name"/>
+            <span asp-validation-for="NewCategory.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-outline-primary">Create</button>
+        </div>
+    </div>
+</form>
+
+<form asp-action="TaskCreate" method="post" class="form mt-4 mb-4">
+    <div class="row">
+        <h5>Create Task</h5>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group col-4">
+            <input asp-for="NewTask.Name" class="form-control" placeholder="Name"/>
+            <span asp-validation-for="NewTask.Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-2">
+            <input asp-for="NewTask.DueDate" class="form-control" />
+            <span asp-validation-for="NewTask.DueDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-2">
+            <select asp-for="NewTask.CategoryId" class="form-control">
+                <option value=" ">No Category</option>
+                @foreach (var category in Model.CategoriesList)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group col-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-outline-primary">Create</button>
+        </div>
+    </div>
+</form>
+
+<h5>List</h5>
+<table class="table table-hover task-table mt-2 border-top">
+    <tbody>
+        @foreach (var item in Model.TaskList.Where(t => !t.Completed))
+        {
+            <tr>
+                <td width="30px">
+                    <form asp-action="TaskComplete" asp-route-id="@item.Id" method="post">
+                        <input style="height:20px; width: 20px;" class="form-check-input" type="checkbox" onchange="this.form.submit()" @if (item.Completed)
+                        {
+                            <text>checked</text>
+                        }>
+                    </form>
+                </td>
+                <td class="text-start" width="600px">
+                    @item.Name
+                </td>
+                <td width="250px">@item.DueDate?.ToString("d MMMM HH:mm")</td>
+                <td width="200px">
+                    @if (item.CategoryId != null)
+                    {
+                        var category = @Model.CategoriesList?.FirstOrDefault(category => category.Id == item.CategoryId);
+                        <p class="primary-bg mb-0">@category?.Name</p>
+                    }
+                </td>
+                <td class="text-end">
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="me-4 p-0 px-2 btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tbody class="completed-table">
+        @foreach (var item in Model.TaskList.Where(t => t.Completed))
+        {
+            <tr class="completed-task">
+                <td width="30px">
+                    <form asp-action="TaskComplete" asp-route-id="@item.Id" method="post">
+                        <input style="height:20px; width: 20px;" class="form-check-input" type="checkbox" onchange="this.form.submit()" @if (item.Completed)
+                        {
+                            <text>checked</text>
+                        }>
+                    </form>
+                </td>
+                <td class="text-start" width="600px">
+                    @item.Name
+                </td>
+                <td width="250px">@item.DueDate?.ToString("d MMMM HH:mm")</td>
+                <td width="200px">
+                    @if (item.CategoryId != null)
+                    {
+                        var category = @Model.CategoriesList?.FirstOrDefault(category => category.Id == item.CategoryId);
+                        <p class="secondary-bg  mb-0">@category?.Name</p>
+                    }
+                </td>
+                <td class="text-end">
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="me-4 p-0 px-2 btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

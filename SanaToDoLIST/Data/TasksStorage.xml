@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Tasks>
+  <Task>
+    <Id>4</Id>
+    <Name>Buy milk</Name>
+    <Completed>false</Completed>
+    <DueDate>2024-06-10T01:22:00.0000000</DueDate>
+    <CategoryId>3</CategoryId>
+  </Task>
+  <Task>
+    <Id>5</Id>
+    <Name>Read new book</Name>
+    <Completed>true</Completed>
+    <DueDate>2024-06-17T01:22:00.0000000</DueDate>
+    <CategoryId>2</CategoryId>
+  </Task>
+  <Task>
+    <Id>6</Id>
+    <Name>Do homework </Name>
+    <Completed>false</Completed>
+    <DueDate>2024-06-12T01:26:00.0000000</DueDate>
+    <CategoryId></CategoryId>
+  </Task>
+</Tasks>
